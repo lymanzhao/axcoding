@@ -186,7 +186,7 @@ pub fn resolve(env: &EnvSnapshot, file: Option<&str>) -> Result<AuthConfig, Stri
     Err(format!(
         "not authenticated. Looked in: ANTHROPIC_API_KEY (unset), \
          ANTHROPIC_AUTH_TOKEN (unset), {} (missing), OPENAI_API_KEY (unset). \
-         Run `axcoding-agent auth import` to copy the provider config from \
+         Run `axcoding auth import` to copy the provider config from \
          Claude Code's settings.json (where cc-switch and similar tools write), \
          or set one of those variables.",
         auth_file_path().display()

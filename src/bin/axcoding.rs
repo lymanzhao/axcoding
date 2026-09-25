@@ -1,4 +1,4 @@
-//! `axcoding-agent` — a minimal coding agent on rig-core, with pi's philosophy.
+//! `axcoding` — a minimal coding agent on rig-core, with pi's philosophy.
 //!
 //! What "pi's ideas" concretely means here (verified against
 //! earendil-works/pi and mariozechner.at):
@@ -110,7 +110,7 @@ async fn interactive_plain<L: Llm>(
     session: Option<Session>,
     mut transcript: Vec<axcoding::ChatMessage>,
 ) -> Result<()> {
-    eprintln!("axcoding-agent: one task per line; Ctrl-D or --exit to quit.");
+    eprintln!("axcoding: one task per line; Ctrl-D or --exit to quit.");
     osc::emit(osc::READY);
     let mut line = String::new();
     loop {
@@ -308,7 +308,7 @@ async fn main() -> Result<()> {
     // the axcoding auth file.
     if task.first().map(String::as_str) == Some("auth") {
         if task.get(1).map(String::as_str) != Some("import") {
-            bail!("usage: axcoding-agent auth import [--force]");
+            bail!("usage: axcoding auth import [--force]");
         }
         let claude =
             std::path::PathBuf::from(std::env::var("HOME").unwrap_or_default())

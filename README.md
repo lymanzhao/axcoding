@@ -4,7 +4,7 @@ A pi-style minimal coding agent on rig-core. Developed inside the
 [termic](https://github.com/lymanzhao/termic) monorepo, extracted into
 this standalone repo in 2026-09.
 
-**`axcoding-agent`** — a minimal coding agent on rig-core, built with pi's
+**`axcoding`** — a minimal coding agent on rig-core, built with pi's
 (Mario Zechner, earendil-works) philosophy.
 
 The `Llm` trait (`src/lib.rs`) is the seam: one completion, no loop.
@@ -26,7 +26,7 @@ cargo install --path .                                      # from a checkout
 cargo install --git https://github.com/lymanzhao/axcoding   # straight from GitHub
 ```
 
-Both put `axcoding-agent` on PATH.
+Both put `axcoding` on PATH.
 
 Auth resolves in order: env ANTHROPIC_API_KEY, env ANTHROPIC_AUTH_TOKEN (relay tokens, honored with ANTHROPIC_BASE_URL - what cc-switch writes), then `~/.axcoding/auth.json` (`AXCODING_HOME` relocates it), then env OPENAI_API_KEY. Same-provider env beats the file (session override); the file beats OTHER providers' env noise (a stray launchd OPENAI key must not hijack an imported GLM config). `--check-auth` reports what resolved. `auth import` copies the provider config from ~/.claude/settings.json (where cc-switch persists it) into the auth file (0600); re-run with `--force` after switching providers.
 
@@ -58,16 +58,16 @@ see its docs/agent-hooks.md); into a pipe they are never written.
 
 ```sh
 cargo test                                   # all tests, no network
-cargo run --bin axcoding-agent -- --provider anthropic "list the rust files here and count their lines"
+cargo run --bin axcoding -- --provider anthropic "list the rust files here and count their lines"
 ```
 
 Real runs resolve auth through the chain above (the auth file works
 after `auth import`).
 
-## What axcoding-agent shows (pi's ideas, concretely)
+## What axcoding shows (pi's ideas, concretely)
 
 - ONE explicit loop over an append-only transcript; the loop is ~40 lines
-  in `src/bin/axcoding_agent.rs`, readable end to end. rig is plumbing, not a
+  in `src/bin/axcoding.rs`, readable end to end. rig is plumbing, not a
   framework (his words: the loop "just loops"; no hidden server state).
 - pi's default four tools: read / write / edit / bash. Nothing else.
 - Sub-1000-token system prompt.
@@ -88,5 +88,5 @@ src/osc.rs        native OSC 777 work-state emission
 src/tools.rs      the four tool specs + execution
 src/tui.rs        inline-TUI session plumbing (Viewport::Inline)
 src/auth.rs       env -> auth.json credential resolution
-src/bin/axcoding_agent.rs the agent CLI
+src/bin/axcoding.rs the agent CLI
 ```

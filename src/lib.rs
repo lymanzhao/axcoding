@@ -1,6 +1,6 @@
 //! axcoding: research prototypes, not product code.
 //!
-//! `bin/axcoding_agent.rs`: a minimal coding agent built to pi's
+//! `bin/axcoding.rs`: a minimal coding agent built to pi's
 //! philosophy: an explicit loop over an append-only transcript, few
 //! tools, no magic.
 //!
@@ -36,7 +36,7 @@ pub enum Role {
 }
 
 /// Minimal append-only transcript entry. Deliberately dumber than rig's
-/// message model: the loop lives in `bin/axcoding_agent.rs`, so it only
+/// message model: the loop lives in `bin/axcoding.rs`, so it only
 /// needs this.
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct ChatMessage {
@@ -129,7 +129,7 @@ pub type EventStream = std::pin::Pin<
 >;
 
 /// The only thing a backend must do: one completion, no loop.
-/// The loop lives in `bin/axcoding_agent.rs` so it stays visible.
+/// The loop lives in `bin/axcoding.rs` so it stays visible.
 pub trait Llm: Send + Sync + 'static {
     fn complete(
         &self,

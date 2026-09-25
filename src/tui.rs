@@ -1,4 +1,4 @@
-//! Inline TUI for axcoding-agent's interactive mode.
+//! Inline TUI for axcoding's interactive mode.
 //!
 //! NOT alt-screen: `Viewport::Inline` pins a small live region at the
 //! bottom (streaming tail + spinner + input line) while everything that
