@@ -1,7 +1,8 @@
 # axcoding
 
-A research prototype developed in this repo and shipped as a termic
-task CLI.
+A pi-style minimal coding agent on rig-core. Developed inside the
+[termic](https://github.com/lymanzhao/termic) monorepo, extracted into
+this standalone repo in 2026-09.
 
 **`axcoding-agent`** — a minimal coding agent on rig-core, built with pi's
 (Mario Zechner, earendil-works) philosophy.
@@ -18,15 +19,18 @@ follow the user across turns, could not act on the environment, and
 answered over a frozen snapshot of the directory. See git history for
 the code and its research notes.)
 
-## Install (for use outside this repo, e.g. as a termic agent)
+## Install
 
 ```sh
-cargo install --path .   # puts axcoding-agent on PATH
+cargo install --path .                                      # from a checkout
+cargo install --git https://github.com/lymanzhao/axcoding   # straight from GitHub
 ```
+
+Both put `axcoding-agent` on PATH.
 
 Auth resolves in order: env ANTHROPIC_API_KEY, env ANTHROPIC_AUTH_TOKEN (relay tokens, honored with ANTHROPIC_BASE_URL - what cc-switch writes), then `~/.axcoding/auth.json` (`AXCODING_HOME` relocates it), then env OPENAI_API_KEY. Same-provider env beats the file (session override); the file beats OTHER providers' env noise (a stray launchd OPENAI key must not hijack an imported GLM config). `--check-auth` reports what resolved. `auth import` copies the provider config from ~/.claude/settings.json (where cc-switch persists it) into the auth file (0600); re-run with `--force` after switching providers.
 
-Interactive mode (no task argument) runs an inline TUI when stdin+stdout are a terminal: streaming output, one session across lines (follow-up questions share context), `/clear` resets the session, Ctrl-D exits, Ctrl-C cancels the in-flight task. Under a PTY host (termic) it just works; finished content flows into scrollback. Non-tty (pipes, scripts) or `--no-tui` / `AXCODING_NO_TUI=1` falls back to the plain one-task-per-line loop. `--max-turns` caps a task's model calls (default 50); `AXCODING_MAX_TOKENS` overrides the output budget (default 8192).
+Interactive mode (no task argument) runs an inline TUI when stdin+stdout are a terminal: streaming output, one session across lines (follow-up questions share context), `/clear` resets the session, Ctrl-D exits, Ctrl-C cancels the in-flight task. Under a PTY host it just works; finished content flows into scrollback. Non-tty (pipes, scripts) or `--no-tui` / `AXCODING_NO_TUI=1` falls back to the plain one-task-per-line loop. `--max-turns` caps a task's model calls (default 50); `AXCODING_MAX_TOKENS` overrides the output budget (default 8192).
 
 ## Sessions
 
@@ -41,14 +45,14 @@ cancel (which rewinds the in-memory transcript) can never leave the file
 diverged. `/clear` empties memory; the file rewrites to match on the next
 task.
 
-## Work-state signals (termic)
+## OSC 777 work-state emission
 
-When stdout is a terminal the binary emits termic's trusted OSC 777 sequence
-(`ESC ]777;notify;termic;<body> BEL`, `axcoding/src/osc.rs`): `session <id>`
-and `agent ready for input` at startup, `agent working` when a task starts,
-`agent done` when it settles (failed and cancelled turns included). termic
-routes these by exact body with no per-agent config; into a pipe they are
-never written.
+When stdout is a terminal the binary emits a trusted OSC 777 sequence
+(`ESC ]777;notify;termic;<body> BEL`, `src/osc.rs`): `session <id>` and
+`agent ready for input` at startup, `agent working` when a task starts,
+`agent done` when it settles (failed and cancelled turns included). Any PTY
+host can route these by exact body with no per-agent config (termic does,
+see its docs/agent-hooks.md); into a pipe they are never written.
 
 ## Run
 

@@ -3,6 +3,8 @@ name = "axcoding"
 version = "0.1.0"
 edition = "2021"
 description = "Standalone research crate: axcoding-agent, a pi-style minimal coding agent on rig-core"
+repository = "https://github.com/lymanzhao/axcoding"
+license = "MIT"
 
 [dependencies]
 futures = "0.3"
